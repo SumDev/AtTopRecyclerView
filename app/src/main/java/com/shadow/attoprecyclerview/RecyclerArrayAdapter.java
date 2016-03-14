@@ -7,7 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Created by pascalwelsch on 04.07.14.
+ * Created by shadow
  */
 public abstract class RecyclerArrayAdapter<T, VH extends RecyclerView.ViewHolder>
         extends RecyclerView.Adapter<VH> {
@@ -92,4 +92,14 @@ public abstract class RecyclerArrayAdapter<T, VH extends RecyclerView.ViewHolder
         Collections.sort(mObjects, comparator);
         notifyItemRangeChanged(0, getItemCount());
     }
+
+    /**
+     * 添加整个链表
+     */
+    public void addAll(List<T> list) {
+        final int size = getItemCount();
+        mObjects.addAll(list);
+        notifyItemRangeChanged(0, size);
+    }
+
 }
