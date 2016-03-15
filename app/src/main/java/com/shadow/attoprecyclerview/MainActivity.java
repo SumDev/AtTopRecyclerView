@@ -1,5 +1,6 @@
 package com.shadow.attoprecyclerview;
 
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,9 +9,13 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,17 +24,20 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
 
+    private RecyclerViewAdapter mRecyclerViewAdapter;
+
+    private List<Session> sessionList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-
+        init();
+        registerListener();
     }
 
 
-    private void initView(){
+    private void init() {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -43,10 +51,71 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mRecyclerView = (RecyclerView)findViewById(R.id.recycler_view);
+
+        TypedArray typedArray = this.getResources().obtainTypedArray(R.array.icon_array);
+        sessionList = new ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            Session session = new Session();
+            session.setAvatar(typedArray.getResourceId(i, R.mipmap.ic_launcher));
+            sessionList.add(session);
+        }
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerViewAdapter = new RecyclerViewAdapter(this);
+        mRecyclerView.setAdapter(mRecyclerViewAdapter);
 
+        refreshView();
+        typedArray.recycle();
+    }
+
+
+    private void registerListener() {
+
+        mRecyclerViewAdapter.setItemListener(new RecyclerViewAdapter.ItemOnLongClickListener() {
+            @Override
+            public void itemLongClick(final Session session) {
+                Bundle bundle = new Bundle();
+                bundle.putInt(TOP_STATES, session.getTop());
+                PopupDialogFragment popupDialog = new PopupDialogFragment();
+                popupDialog.setArguments(bundle);
+                popupDialog.setItemOnClickListener(new PopupDialogFragment.DialogItemOnClickListener() {
+                    @Override
+                    public void onTop() {
+                        //置顶
+                        session.setTop(1);
+                        session.setTime(System.currentTimeMillis());
+                        refreshView();
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        //取消
+                        session.setTop(0);
+                        session.setTime(System.currentTimeMillis());
+                        refreshView();
+                    }
+                });
+                popupDialog.show(getFragmentManager(), "popup");
+            }
+        });
+
+        mRecyclerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, "hello", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+    }
+
+
+    private void refreshView() {
+        //如果不调用sort方法，是不会进行排序的，也就不会调用compareTo
+        Collections.sort(sessionList);
+        mRecyclerViewAdapter.updateData(sessionList);
     }
 
 

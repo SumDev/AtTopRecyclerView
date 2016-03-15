@@ -1,36 +1,90 @@
 package com.shadow.attoprecyclerview;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by shadow on 2016/3/15.
  */
-public class RecyclerViewAdapter extends RecyclerArrayAdapter<Session,RecyclerViewAdapter.RecyclerViewHolder>{
+public class RecyclerViewAdapter extends RecyclerArrayAdapter<Session, RecyclerViewAdapter.RecyclerViewHolder> {
+
+    private Context mContext;
+
+    private LayoutInflater mInflater;
+
+    private ItemOnLongClickListener itemListener;
 
 
-    public RecyclerViewAdapter(List<Session> objects) {
-        super(objects);
+    public RecyclerViewAdapter(Context context) {
+        super(new ArrayList<Session>());
+        mContext = context;
+        mInflater = LayoutInflater.from(context);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewHolder holder, int position) {
-
+    public void onBindViewHolder(RecyclerViewHolder holder, final int position) {
+        Session session = getItem(position);
+        holder.textView.setText(String.valueOf(session.getTop()));
+        holder.imageView.setImageResource(session.getAvatar());
+        //自己实现itemClickListener
+        holder.mItemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                //回调
+                itemListener.itemLongClick(getItem(position));
+                return false;
+            }
+        });
+        if (session.getTop() == 1) {
+            holder.mItemView.setBackgroundResource(R.drawable.bg_top_item_selector);
+        } else {
+            holder.mItemView.setBackgroundResource(R.drawable.bg_item_selector);
+        }
     }
 
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+        return new RecyclerViewHolder(mInflater.inflate(R.layout.itemview, parent, false));
     }
 
-    public static class RecyclerViewHolder extends RecyclerView.ViewHolder{
+
+    public void setItemListener(ItemOnLongClickListener listener) {
+        itemListener = listener;
+    }
+
+    public void updateData(List<Session> list) {
+        clear();
+        addAll(list);
+    }
+
+    public static class RecyclerViewHolder extends RecyclerView.ViewHolder {
+
+        TextView textView;
+
+        ImageView imageView;
+
+        View mItemView;
 
         public RecyclerViewHolder(View itemView) {
             super(itemView);
+            mItemView = itemView;
+            textView = (TextView) itemView.findViewById(R.id.textView);
+            imageView = (ImageView) itemView.findViewById(R.id.avatar_img);
         }
+    }
+
+
+    public interface ItemOnLongClickListener {
+
+        void itemLongClick(Session session);
     }
 
 }
