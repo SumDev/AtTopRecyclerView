@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by shadow on 2016/3/15.
  */
-public class RecyclerViewAdapter  extends RecyclerArrayAdapter{
+public class RecyclerViewAdapter extends RecyclerArrayAdapter<Session,RecyclerViewAdapter.RecyclerViewHolder>{
 
 
     public RecyclerViewAdapter(List<Session> objects) {
@@ -17,17 +17,12 @@ public class RecyclerViewAdapter  extends RecyclerArrayAdapter{
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerViewHolder holder, int position) {
 
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List payloads) {
-        super.onBindViewHolder(holder, position, payloads);
-    }
-
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return null;
     }
 
