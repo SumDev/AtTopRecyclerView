@@ -50,6 +50,7 @@ public class RecyclerViewAdapter extends RecyclerArrayAdapter<Session, RecyclerV
 
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        //  使用这种解析方式 RecyclerView的match parent 属性才不会失效
         return new RecyclerViewHolder(mInflater.inflate(R.layout.itemview, parent, false));
     }
 
