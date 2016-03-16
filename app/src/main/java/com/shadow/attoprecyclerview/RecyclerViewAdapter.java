@@ -16,7 +16,6 @@ import java.util.List;
  */
 public class RecyclerViewAdapter extends RecyclerArrayAdapter<Session, RecyclerViewAdapter.RecyclerViewHolder> {
 
-    private Context mContext;
 
     private LayoutInflater mInflater;
 
@@ -25,7 +24,6 @@ public class RecyclerViewAdapter extends RecyclerArrayAdapter<Session, RecyclerV
 
     public RecyclerViewAdapter(Context context) {
         super(new ArrayList<Session>());
-        mContext = context;
         mInflater = LayoutInflater.from(context);
     }
 
