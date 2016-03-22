@@ -65,6 +65,20 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerViewAdapter = new RecyclerViewAdapter(this);
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
+//        ItemTouchHelper.Callback callback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP|ItemTouchHelper.DOWN,ItemTouchHelper.RIGHT) {
+//            @Override
+//            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+//                int fromPosition = viewHolder.getAdapterPosition();
+//                return false;
+//            }
+//
+//            @Override
+//            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+//
+//            }
+//        };
+//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+//        itemTouchHelper.attachToRecyclerView(mRecyclerView);
 
         refreshView();
         typedArray.recycle();
