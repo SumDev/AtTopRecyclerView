@@ -8,33 +8,33 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by shadow on 2016/3/15.
+ * Created by shadow on 2016/3/23.
  */
-public class RecyclerViewAdapter extends RecyclerArrayAdapter<Session, RecyclerViewAdapter.RecyclerViewHolder> {
-
+public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder> {
 
     private LayoutInflater mInflater;
 
     private ItemOnLongClickListener itemListener;
 
+    private List<Session> sessionList;
 
-    public RecyclerViewAdapter(Context context) {
-        super(new ArrayList<Session>());
-        mInflater = LayoutInflater.from(context);
-    }
 
-    public RecyclerViewAdapter(Context context,List<Session> list) {
-        super(list);
+    public RecyclerAdapter(Context context,List<Session> list) {
+        sessionList = list;
         mInflater = LayoutInflater.from(context);
     }
 
     @Override
+    public int getItemCount() {
+        return sessionList.size();
+    }
+
+    @Override
     public void onBindViewHolder(RecyclerViewHolder holder, final int position) {
-        Session session = getItem(position);
+        Session session = sessionList.get(position);
         holder.textView.setText(String.valueOf(session.getTop()));
         holder.imageView.setImageResource(session.getAvatar());
         //自己实现itemClickListener
@@ -42,7 +42,7 @@ public class RecyclerViewAdapter extends RecyclerArrayAdapter<Session, RecyclerV
             @Override
             public boolean onLongClick(View v) {
                 //回调
-                itemListener.itemLongClick(getItem(position));
+                itemListener.itemLongClick(sessionList.get(position));
                 return false;
             }
         });
@@ -62,11 +62,6 @@ public class RecyclerViewAdapter extends RecyclerArrayAdapter<Session, RecyclerV
 
     public void setItemListener(ItemOnLongClickListener listener) {
         itemListener = listener;
-    }
-
-    public void updateData(List<Session> list) {
-        clear();
-        addAll(list);
     }
 
     public static class RecyclerViewHolder extends RecyclerView.ViewHolder {
@@ -90,5 +85,4 @@ public class RecyclerViewAdapter extends RecyclerArrayAdapter<Session, RecyclerV
 
         void itemLongClick(Session session);
     }
-
 }

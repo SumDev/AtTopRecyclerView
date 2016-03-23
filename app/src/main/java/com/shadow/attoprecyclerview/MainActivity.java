@@ -9,6 +9,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
 
     private RecyclerViewAdapter mRecyclerViewAdapter;
+
+    private RecyclerAdapter mRecyclerAdapter;
 
     private List<Session> sessionList;
 
@@ -63,22 +66,36 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerViewAdapter = new RecyclerViewAdapter(this);
-        mRecyclerView.setAdapter(mRecyclerViewAdapter);
-//        ItemTouchHelper.Callback callback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP|ItemTouchHelper.DOWN,ItemTouchHelper.RIGHT) {
-//            @Override
-//            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-//                int fromPosition = viewHolder.getAdapterPosition();
-//                return false;
-//            }
-//
-//            @Override
-//            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-//
-//            }
-//        };
-//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-//        itemTouchHelper.attachToRecyclerView(mRecyclerView);
+        mRecyclerViewAdapter = new RecyclerViewAdapter(this,sessionList);
+        mRecyclerAdapter = new RecyclerAdapter(this,sessionList);
+        mRecyclerView.setAdapter(mRecyclerAdapter);
+        ItemTouchHelper.Callback callback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                int fromPosition = viewHolder.getAdapterPosition();
+                int toPosition = target.getAdapterPosition();
+                if (fromPosition < toPosition) {
+                    for (int i = fromPosition; i < toPosition; i++) {
+                        Collections.swap(sessionList, i, i + 1);
+                    }
+                } else {
+                    for (int i = toPosition; i < fromPosition; i++) {
+                        Collections.swap(sessionList, i, i + 1);
+                    }
+                }
+
+                mRecyclerAdapter.notifyItemMoved(fromPosition,toPosition);
+
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
 
         refreshView();
         typedArray.recycle();
@@ -87,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void registerListener() {
 
-        mRecyclerViewAdapter.setItemListener(new RecyclerViewAdapter.ItemOnLongClickListener() {
+        mRecyclerAdapter.setItemListener(new RecyclerAdapter.ItemOnLongClickListener() {
             @Override
             public void itemLongClick(final Session session) {
                 Bundle bundle = new Bundle();
@@ -129,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
     private void refreshView() {
         //如果不调用sort方法，是不会进行排序的，也就不会调用compareTo
         Collections.sort(sessionList);
-        mRecyclerViewAdapter.updateData(sessionList);
+        mRecyclerAdapter.notifyDataSetChanged();
     }
 
 
