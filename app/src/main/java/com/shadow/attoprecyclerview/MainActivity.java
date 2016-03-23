@@ -25,7 +25,10 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
 
-    private RecyclerViewAdapter mRecyclerViewAdapter;
+    /**
+     * 可以不使用ArrayAdapter来实现
+     * */
+//    private RecyclerViewAdapter mRecyclerViewAdapter;
 
     private RecyclerAdapter mRecyclerAdapter;
 
