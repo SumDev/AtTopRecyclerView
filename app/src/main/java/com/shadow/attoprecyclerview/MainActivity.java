@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerViewAdapter = new RecyclerViewAdapter(this,sessionList);
+//        mRecyclerViewAdapter = new RecyclerViewAdapter(this,sessionList);
         mRecyclerAdapter = new RecyclerAdapter(this,sessionList);
         mRecyclerView.setAdapter(mRecyclerAdapter);
         ItemTouchHelper.Callback callback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT) {
