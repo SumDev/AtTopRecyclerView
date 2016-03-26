@@ -13,6 +13,8 @@ import java.util.List;
 
 /**
  * Created by shadow on 2016/3/15.
+ * 建议只有在有复杂的数据操作的时候才使用ArrayAdapter
+ *
  */
 public class RecyclerViewAdapter extends RecyclerArrayAdapter<Session, RecyclerViewAdapter.RecyclerViewHolder> {
 
