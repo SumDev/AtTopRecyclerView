@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
      * */
 //    private RecyclerViewAdapter mRecyclerViewAdapter;
 
-            //使用默认的adapter
+    //使用默认的adapter
     private RecyclerAdapter mRecyclerAdapter;
 
     private List<Session> sessionList;
